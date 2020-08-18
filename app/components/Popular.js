@@ -107,7 +107,7 @@ export default class Popular extends React.Component {
             error: null,
         })
 
-        // Fetch repos only if they do not alreay exist in our state object
+        // Fetch repos only if they do not already exist in our state object
         if (!this.state.repos[selectedLanguage]) {
             fetchPopularRepos(selectedLanguage)
                 .then((data) => {
