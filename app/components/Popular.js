@@ -34,7 +34,7 @@ export default class Popular extends React.Component {
 
         this.state = {
             selectedLanguage: 'All',
-            repos: null,
+            repos: {},
             error: null
         }
 
@@ -50,29 +50,36 @@ export default class Popular extends React.Component {
         this.setState({
             selectedLanguage,
             error: null,
-            repos: null
-            /* If both error and repos are null, this means we are loading repositories.
-               We could have added a "loading" variable which would be true when error and repos are null, but it isn't
-               advised by Tyler to add state components when it's possible to work without it. See isLoading() below */
         })
 
-        fetchPopularRepos(selectedLanguage)
-            .then((repos) => this.setState({
-                repos,
-                error: null
-            }))
-            // Catching the error at the UI level
-            .catch(() => {
-                console.warn('Error fetching repos: ', error)
-
-                this.setState({
-                    error: 'There was an error fetching the repositories.'
+        // Fetch repos only if they do not alreay exist in our state object
+        if (!this.state.repos[selectedLanguage]) {
+            fetchPopularRepos(selectedLanguage)
+                .then((data) => {
+                    // we don't want to replace the repos in the state, we want to add properties to this state object
+                    this.setState(({repos}) => ({
+                        repos: {
+                            repos,
+                            [selectedLanguage]: data
+                        }
+                    }))
                 })
-            })
+                // Catching the error at the UI level
+                .catch(() => {
+                    console.warn('Error fetching repos: ', error)
+
+                    this.setState({
+                        error: 'There was an error fetching the repositories.'
+                    })
+                })
+        }
     }
 
     isLoading() {
-        return this.state.repos === null && this.state.error === null
+        const {selectedLanguage, repos, error} = this.state
+
+        // Loading only if we do not already have the data for the selected language in our state object
+        return  !repos[selectedLanguage] && error === null
     }
 
     render() {
@@ -90,8 +97,8 @@ export default class Popular extends React.Component {
 
                 {error && <p>{error}</p>}
 
-                {/*Display fetched repos without styling them*/}
-                {repos && <pre>{JSON.stringify(repos, null, 2)}</pre>}
+                {/*Display fetched repos without styling them, only if selected language is a thing in repos*/}
+                {repos[selectedLanguage] && <pre>{JSON.stringify(repos[selectedLanguage], null, 2)}</pre>}
             </React.Fragment>
         )
     }
