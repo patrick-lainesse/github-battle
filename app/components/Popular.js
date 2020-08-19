@@ -46,7 +46,7 @@ function ReposGrid({repos}) {
                             href={html_url}
                             avatar={avatar_url}
                             name={login}
-                            header={`#{index + 1}`}
+                            header={`#${index + 1}`}
                         >
                             <ul className='card-list'>
                                 <li>
