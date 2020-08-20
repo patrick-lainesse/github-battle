@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import withHover from './withHover'
+import Hover from './Hover'
 
 // Styles aren't in index.css so this Component can be reusable, we could put it on npm and use it as is
 const styles = {
@@ -25,20 +25,21 @@ const styles = {
     }
 }
 
-function Tooltip({text, children, hovering}) {
+// With render props, we no longer pass the props to the Hover Component, instead, it's Tooltip that is being rendered
+export default function Tooltip({text, children}) {
     return (
-        <div style={styles.container}>
-            {hovering === true && <div style={styles.tooltip}>{text}</div>}
-            {children}
-        </div>
+        <Hover>
+            {/*Props rendering avoids the naming collision, as we can name our argument the way we want*/}
+            {(hovering) => (
+                <div style={styles.container}>
+                    {hovering === true && <div style={styles.tooltip}>{text}</div>}
+                    {children}
+                </div>
+            )}
+        </Hover>
     )
 }
 
 Tooltip.propTypes = {
-    text: PropTypes.string.isRequired,
-    hovering: PropTypes.bool.isRequired
+    text: PropTypes.string.isRequired
 }
-
-/* Adding a second parameter allows customized naming of the hovering property, in case a user of this Component already
-has a hovering property on his Component and wants to avoid a name collision. */
-export default withHover(Tooltip)
