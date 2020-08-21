@@ -37,18 +37,11 @@ function Instructions() {
  * Component to get the username from the input field
  */
 class PlayerInput extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            username: ''
-        }
-
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleChange = this.handleChange.bind(this)
+    state = {
+        username: ''
     }
 
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         // Prevents the normal browser event to take place
         event.preventDefault()
 
@@ -56,7 +49,7 @@ class PlayerInput extends React.Component {
     }
 
     // Gets the value that the user typed in and updates the state of the component
-    handleChange(event) {
+    handleChange = (event) => {
         this.setState({
             username: event.target.value
         })
@@ -138,29 +131,22 @@ PlayerPreview.propTypes = {
 }
 
 export default class Battle extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            playerOne: null,
-            playerTwo: null
-        }
-
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleReset = this.handleReset.bind(this)
+    state = {
+        playerOne: null,
+        playerTwo: null
     }
 
-    handleSubmit(id, player) {
+    handleSubmit = (id, player) => {
         this.setState({
             [id]: player
         })
-    }
+    };
 
-    handleReset(id) {
+    handleReset = id => {
         this.setState({
             [id]: null
         })
-    }
+    };
 
     render() {
         const {playerOne, playerTwo} = this.state
