@@ -5,6 +5,8 @@ import Card from './Card'
 import PropTypes from 'prop-types'
 import Loading from "./Loading";
 import Tooltip from './Tooltip'
+import queryString from 'query-string'
+import {Link} from 'react-router-dom'
 
 class ProfileList extends React.Component {
     render() {
@@ -62,7 +64,9 @@ export default class Results extends React.Component {
     }
 
     componentDidMount() {
-        const {playerOne, playerTwo} = this.props
+        /* Using query-string npm module to fetch the query string passed by the battle component. Used debugger and
+           logged this.props in the console to get this.props.location.search */
+        const {playerOne, playerTwo} = queryString.parse(this.props.location.search)
 
         battle([playerOne, playerTwo])
             .then((players) => {
@@ -115,18 +119,12 @@ export default class Results extends React.Component {
                         <ProfileList profile={loser.profile}/>
                     </Card>
                 </div>
-                <button
-                    onClick={this.props.onReset}
+                <Link
+                    to='/battle'
                     className='btn dark-btn btn-space'>
                     Reset
-                </button>
+                </Link>
             </React.Fragment>
         )
     }
-}
-
-Results.propTypes = {
-    playerOne: PropTypes.string.isRequired,
-    playerTwo: PropTypes.string.isRequired,
-    onReset: PropTypes.func.isRequired
 }
